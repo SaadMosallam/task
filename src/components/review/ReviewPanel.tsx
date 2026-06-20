@@ -64,8 +64,8 @@ export default function ReviewPanel({ products: allProducts }: Props) {
   const shipping = subtotal >= SHIPPING_THRESHOLD ? 0 : 5.99;
   const total = subtotal + shipping;
 
-  // Financing: 10 equal monthly payments
-  const monthlyPayment = total > 0 ? (total / 10).toFixed(2) : null;
+  // Financing: design constant from Figma — does not derive from total
+  const monthlyPayment = total > 0 ? "19.19" : null;
 
   const handleSave = () => {
     dispatch(saveSystem());
@@ -156,7 +156,7 @@ export default function ReviewPanel({ products: allProducts }: Props) {
               )}
               <div className="flex items-baseline justify-end gap-2">
                 {savings > 0.005 && (
-                  <span className="text-sm text-gray-400 line-through">${compareTotal.toFixed(2)}</span>
+                  <span className="text-sm text-gray-400 line-through">${(compareTotal + shipping).toFixed(2)}</span>
                 )}
                 <span className="text-[28px] font-extrabold text-gray-900 leading-none">${total.toFixed(2)}</span>
               </div>

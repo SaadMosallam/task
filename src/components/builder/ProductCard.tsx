@@ -10,7 +10,6 @@ import { setQty } from "@/store/bundleSlice";
 
 interface Props {
   product: Product;
-  /** cameras use a horizontal layout at md, compact vertical at xl */
   isCamera?: boolean;
 }
 
@@ -46,20 +45,13 @@ export default function ProductCard({ product, isCamera }: Props) {
 
   return (
     <div
-      className={`relative flex rounded-xl border-2 p-3.5 transition-all bg-white h-full
-        ${isCamera ? "flex-col md:flex-row md:items-start xl:flex-col" : "flex-col"}
+      className={`relative flex flex-col rounded-xl border-2 p-3.5 transition-all bg-white h-full
         ${isSelected ? "border-[#4C51BF] shadow-md" : "border-gray-200 hover:border-gray-300"}`}
     >
       {product.badge && <Badge label={product.badge} />}
 
       {/* Image */}
-      <div
-        className={`relative shrink-0 rounded-lg overflow-hidden bg-gray-50
-          ${isCamera
-            ? "w-full aspect-[4/3] mb-3 mt-1 md:w-28 md:h-28 md:mb-0 md:mr-3 md:mt-0 xl:w-full xl:h-auto xl:aspect-[4/3] xl:mb-3 xl:mr-0 xl:mt-1"
-            : "w-full aspect-[4/3] mb-3 mt-1"
-          }`}
-      >
+      <div className="relative shrink-0 rounded-lg overflow-hidden bg-gray-50 w-full aspect-[4/3] mb-3 mt-1">
         <Image
           src={product.image}
           alt={product.name}
@@ -71,7 +63,7 @@ export default function ProductCard({ product, isCamera }: Props) {
       {/* Content */}
       <div className="flex-1 flex flex-col gap-1.5 min-w-0">
         <h3 className="font-semibold text-gray-900 text-sm leading-snug">{product.name}</h3>
-        <p className={`text-xs text-gray-500 leading-relaxed ${isCamera ? "xl:line-clamp-2" : ""}`}>
+        <p className="text-xs text-gray-500 leading-relaxed">
           {product.description}
         </p>
 
@@ -86,7 +78,6 @@ export default function ProductCard({ product, isCamera }: Props) {
             variants={product.variants}
             selected={selectedVariant}
             onSelect={setSelectedVariant}
-            showThumbnail={product.image}
           />
         )}
 

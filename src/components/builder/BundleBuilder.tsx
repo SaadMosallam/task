@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 import { Product } from "@/types";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
-import { seedItems } from "@/store/bundleSlice";
+import { seedItems, STORAGE_KEY } from "@/store/bundleSlice";
 import BuilderStep from "./BuilderStep";
 import ReviewPanel from "@/components/review/ReviewPanel";
 
@@ -17,8 +17,6 @@ interface Props {
   products: Product[];
   steps: StepConfig[];
 }
-
-const STORAGE_KEY = "wyze_bundle_v3";
 
 export default function BundleBuilder({ products, steps }: Props) {
   const dispatch = useAppDispatch();
