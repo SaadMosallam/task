@@ -7,7 +7,6 @@
  *  - Required-product stepper minimum via ReviewLineRow
  */
 import { render, screen, fireEvent } from "@testing-library/react";
-import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import bundleReducer, { seedItems, setActiveStep } from "@/store/bundleSlice";
 import QuantityStepper from "@/components/ui/QuantityStepper";
@@ -18,10 +17,6 @@ import StepHeader from "@/components/builder/StepHeader";
 
 function makeStore() {
   return configureStore({ reducer: { bundle: bundleReducer } });
-}
-
-function wrap(ui: React.ReactElement, store = makeStore()) {
-  return { ...render(<Provider store={store}>{ui}</Provider>), store };
 }
 
 // ─── QuantityStepper — min enforcement ───────────────────────────────────────
@@ -99,7 +94,7 @@ describe("VariantSelector", () => {
     expect(onSelect).toHaveBeenCalledWith("grey");
   });
 
-  it("does not call onSelect when the already-selected chip is clicked", () => {
+  it("calls onSelect when the already-selected chip is clicked", () => {
     const onSelect = jest.fn();
     render(<VariantSelector variants={variants} selected="white" onSelect={onSelect} />);
     fireEvent.click(screen.getByLabelText("White"));

@@ -56,8 +56,8 @@ export default function ProductCard({ product, isCamera }: Props) {
       <div
         className={`relative shrink-0 rounded-lg overflow-hidden bg-gray-50
           ${isCamera
-            ? "w-full aspect-[4/3] mb-3 mt-1 lg:w-28 lg:h-28 lg:aspect-auto lg:mb-0 lg:mr-3 lg:mt-0"
-            : "w-full aspect-[4/3] mb-3 mt-1"
+            ? "w-full aspect-4/3 mb-3 mt-1 lg:w-28 lg:h-28 lg:aspect-auto lg:mb-0 lg:mr-3 lg:mt-0"
+            : "w-full aspect-4/3 mb-3 mt-1"
           }`}
       >
         <Image

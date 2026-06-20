@@ -163,7 +163,7 @@ export default function ReviewPanel({ products: allProducts }: Props) {
 
           {/* Tablet-only guarantee copy */}
           <p className="hidden sm:block lg:hidden text-[11px] text-gray-500 text-center leading-relaxed">
-            30-day hassle-free returns. Not happy? We&apos;ll give you a 100% refund, no questions asked.
+            30-day hassle-free returns. If you&apos;re not totally in love with the product, we will refund you 100%.
           </p>
 
           <button

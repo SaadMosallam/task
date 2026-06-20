@@ -166,6 +166,10 @@ describe("calcBundleTotals", () => {
       id: "plan", category: "plans", name: "Plan", description: "",
       image: "/plan.png", price: 9.99, compareAtPrice: 12.99, priceUnit: "mo",
     },
+    {
+      id: "design-bundle", category: "accessories", name: "Design bundle", description: "",
+      image: "/bundle.png", price: 187.89,
+    },
   ];
   const productMap = Object.fromEntries(PRODUCTS.map((p) => [p.id, p]));
 
@@ -205,17 +209,18 @@ describe("calcBundleTotals", () => {
     expect(savings).toBeCloseTo(29.92, 2);
   });
 
-  it("derives monthlyPayment as total / 10", () => {
-    // 4 × cam-v4 = $111.92 → free shipping → total = $111.92 → /10 = $11.19
-    const { monthlyPayment, total } = calcBundleTotals(
-      [{ productId: "cam-v4", variantId: "white", qty: 4 }],
+  it("scales financing dynamically while preserving the Figma baseline", () => {
+    const { monthlyPayment } = calcBundleTotals(
+      [{ productId: "design-bundle", qty: 1 }],
       productMap,
     );
-    expect(monthlyPayment).toBe((total / 10).toFixed(2));
+    expect(monthlyPayment).toBe("19.19");
   });
 
-  it("returns null monthlyPayment for an empty cart", () => {
-    const { monthlyPayment } = calcBundleTotals([], productMap);
+  it("returns zero totals and no financing for an empty cart", () => {
+    const { shipping, total, monthlyPayment } = calcBundleTotals([], productMap);
+    expect(shipping).toBe(0);
+    expect(total).toBe(0);
     expect(monthlyPayment).toBeNull();
   });
 });
