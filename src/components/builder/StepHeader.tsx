@@ -22,6 +22,8 @@ export default function StepHeader({ stepNum, title, category, selectedCount, is
   return (
     <button
       onClick={onClick}
+      aria-expanded={isOpen}
+      aria-controls={`step-panel-${stepNum}`}
       className="w-full flex items-center gap-3 px-4 sm:px-5 py-4 hover:bg-gray-50 transition-colors text-left cursor-pointer"
     >
       <Icon className="w-5 h-5 text-gray-500 shrink-0" />

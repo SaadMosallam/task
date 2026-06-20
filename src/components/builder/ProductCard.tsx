@@ -78,7 +78,7 @@ export default function ProductCard({ product }: Props) {
 
         <div className="flex items-center justify-between mt-auto pt-1">
           {!product.priceUnit && (
-            <QuantityStepper value={currentQty} onChange={handleQtyChange} />
+            <QuantityStepper value={currentQty} onChange={handleQtyChange} min={product.required ? 1 : 0} />
           )}
           {product.priceUnit && (
             <button

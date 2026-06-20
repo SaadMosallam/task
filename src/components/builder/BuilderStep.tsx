@@ -50,7 +50,7 @@ export default function BuilderStep({ step, products, isLast }: Props) {
       />
 
       {isOpen && (
-        <div className="px-4 sm:px-5 pb-5">
+        <div id={`step-panel-${step.id}`} className="px-4 sm:px-5 pb-5">
           <div className={`grid ${GRID[step.category] ?? "grid-cols-1 sm:grid-cols-2"} gap-3`}>
             {products.map((p) => (
               <ProductCard key={p.id} product={p} />

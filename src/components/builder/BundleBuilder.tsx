@@ -28,7 +28,7 @@ export default function BundleBuilder({ products, steps }: Props) {
     if (persisted) {
       try {
         const parsed = JSON.parse(persisted);
-        if (Array.isArray(parsed) && parsed.length > 0) {
+        if (Array.isArray(parsed)) {
           dispatch(seedItems(parsed));
           return;
         }

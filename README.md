@@ -20,11 +20,11 @@ npm run build
 npm start
 ```
 
-Requires Node.js 18+.
+Requires Node.js 20.9+.
 
 ## Stack
 
-- **Next.js 15** (App Router) — React framework
+- **Next.js 16** (App Router) — React framework
 - **TypeScript** — static typing throughout
 - **Tailwind CSS** — utility-first styling
 - **Redux Toolkit** — state management (all cart/selection state lives in a single Redux slice)
@@ -37,7 +37,7 @@ Requires Node.js 18+.
 
 **Per-variant quantity tracking.** Each (productId, variantId) pair is its own `LineItem` in the Redux store. Switching color chips on a card changes which variant's count is displayed in the stepper, but other variants' counts are preserved. The review panel shows every variant with qty > 0 as its own line.
 
-**Seeding and persistence.** On first load, items are seeded from `initialQty` fields in the JSON (matching the design's pre-populated state). On subsequent loads, the persisted localStorage state is restored. Clicking "Save my system for later" explicitly serialises the current store to localStorage under key `wyze_bundle_v2`.
+**Seeding and persistence.** On first load, items are seeded from `initialQty` fields in the JSON (matching the design's pre-populated state). On subsequent loads, the persisted localStorage state is restored. The store auto-saves to localStorage on every quantity change under key `wyze_bundle_v3`. Clicking "Save my system for later" also triggers an explicit save.
 
 **Sticky review panel.** On desktop the review panel is `position: sticky` so it stays in view while the user scrolls through steps. On mobile it collapses below the builder.
 
