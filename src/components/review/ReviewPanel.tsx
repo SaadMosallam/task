@@ -151,7 +151,7 @@ export default function ReviewPanel({ products: allProducts }: Props) {
       {/* Savings callout */}
       {savings > 0.005 && (
         <p className="text-[12px] text-[#2D6A4F] font-semibold text-center -mt-1">
-          Congrats! You're saving ${savings.toFixed(2)} on your security bundle!
+          Congrats! You&apos;re saving ${savings.toFixed(2)} on your security bundle!
         </p>
       )}
 
@@ -209,21 +209,21 @@ function ReviewLineRow({ line, onQtyChange }: { line: ReviewLine; onQtyChange: (
       <div className="text-right shrink-0 min-w-[60px]">
         {isPlan
           ? line.product.compareAtPrice != null && (
-              <p className="text-xs text-gray-400 line-through leading-none">
-                ${line.product.compareAtPrice.toFixed(2)}/mo
-              </p>
-            )
+            <p className="text-xs text-gray-400 line-through leading-none">
+              ${line.product.compareAtPrice.toFixed(2)}/mo
+            </p>
+          )
           : line.compareLinePrice != null && line.compareLinePrice !== line.linePrice && (
-              <p className="text-xs text-gray-400 line-through leading-none">
-                ${line.compareLinePrice.toFixed(2)}
-              </p>
-            )}
+            <p className="text-xs text-gray-400 line-through leading-none">
+              ${line.compareLinePrice.toFixed(2)}
+            </p>
+          )}
         <p className={`text-sm font-bold leading-tight ${isFree ? "text-green-600" : "text-[#4C51BF]"}`}>
           {isFree
             ? "FREE"
             : isPlan
-            ? `$${line.product.price.toFixed(2)}/mo`
-            : `$${line.linePrice.toFixed(2)}`}
+              ? `$${line.product.price.toFixed(2)}/mo`
+              : `$${line.linePrice.toFixed(2)}`}
         </p>
       </div>
     </div>

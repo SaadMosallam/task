@@ -12,7 +12,6 @@ export default function VariantSelector({ variants, selected, onSelect }: Props)
     <div className="flex items-center gap-1.5 flex-wrap">
       {variants.map((v) => {
         const isSelected = v.id === selected;
-        const isDark = v.color === "#1F2937";
         return (
           <button
             key={v.id}

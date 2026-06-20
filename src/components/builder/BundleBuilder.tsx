@@ -1,7 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { Product } from "@/types";
-import { useAppDispatch, useAppSelector } from "@/hooks/useAppDispatch";
+import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { seedItems } from "@/store/bundleSlice";
 import BuilderStep from "./BuilderStep";
 import ReviewPanel from "@/components/review/ReviewPanel";
@@ -45,13 +45,13 @@ export default function BundleBuilder({ products, steps }: Props) {
         qty: p.initialQty!,
       }));
     dispatch(seedItems(seed));
-  }, []);
+  }, [dispatch, products]);
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-screen-xl mx-auto px-4 sm:px-6 py-6 lg:py-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 lg:py-10">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 text-center lg:text-left">
-          Let's get started!
+          Let&apos;s get started!
         </h1>
 
         <div className="flex flex-col lg:flex-row gap-6 xl:gap-8 items-start">

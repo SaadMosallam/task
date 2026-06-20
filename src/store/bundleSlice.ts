@@ -28,13 +28,6 @@ function saveToStorage(items: LineItem[]) {
   }
 }
 
-const buildInitialItems = (): LineItem[] => {
-  const persisted = loadFromStorage();
-  if (persisted.length > 0) return persisted;
-  // seed from product initialQty values — done in the component layer after products load
-  return [];
-};
-
 const initialState: BundleState = {
   items: [],
   activeStep: 1,
@@ -50,11 +43,15 @@ const bundleSlice = createSlice({
     },
     setQty(
       state,
-      action: PayloadAction<{ productId: string; variantId?: string; qty: number }>
+      action: PayloadAction<{
+        productId: string;
+        variantId?: string;
+        qty: number;
+      }>,
     ) {
       const { productId, variantId, qty } = action.payload;
       const idx = state.items.findIndex(
-        (i) => i.productId === productId && i.variantId === variantId
+        (i) => i.productId === productId && i.variantId === variantId,
       );
       if (qty <= 0) {
         if (idx !== -1) state.items.splice(idx, 1);
@@ -76,5 +73,6 @@ const bundleSlice = createSlice({
   },
 });
 
-export const { seedItems, setQty, setActiveStep, saveSystem } = bundleSlice.actions;
+export const { seedItems, setQty, setActiveStep, saveSystem } =
+  bundleSlice.actions;
 export default bundleSlice.reducer;

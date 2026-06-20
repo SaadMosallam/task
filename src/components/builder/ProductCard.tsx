@@ -49,7 +49,7 @@ export default function ProductCard({ product }: Props) {
     >
       {product.badge && <Badge label={product.badge} />}
 
-      <div className="relative w-full aspect-[4/3] mb-3 mt-1 rounded-lg overflow-hidden bg-gray-50">
+      <div className="relative w-full aspect-4/3 mb-3 mt-1 rounded-lg overflow-hidden bg-gray-50">
         <Image
           src={product.image}
           alt={product.name}
