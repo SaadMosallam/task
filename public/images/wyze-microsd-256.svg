@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300">
+  <rect width="300" height="300" fill="white"/>
+  <!-- Card body -->
+  <rect x="95" y="60" width="110" height="145" rx="8" fill="#1a1a2e" stroke="#0f0f1a" stroke-width="1.5"/>
+  <!-- Notch top-right corner -->
+  <polygon points="175,60 205,60 205,85 175,60" fill="white"/>
+  <polygon points="175,60 205,85 175,85" fill="#111827"/>
+  <!-- Gold contacts at bottom -->
+  <rect x="101" y="172" width="98" height="28" rx="0" fill="#b8960c"/>
+  <rect x="101" y="172" width="98" height="4" fill="#d4a017"/>
+  <!-- Contact strips -->
+  <rect x="107" y="176" width="10" height="20" rx="1" fill="#c8a415"/>
+  <rect x="121" y="176" width="10" height="20" rx="1" fill="#c8a415"/>
+  <rect x="135" y="176" width="10" height="20" rx="1" fill="#c8a415"/>
+  <rect x="149" y="176" width="10" height="20" rx="1" fill="#c8a415"/>
+  <rect x="163" y="176" width="10" height="20" rx="1" fill="#c8a415"/>
+  <rect x="177" y="176" width="16" height="20" rx="1" fill="#c8a415"/>
+  <!-- Card label area -->
+  <rect x="103" y="68" width="94" height="98" rx="5" fill="#1e293b"/>
+  <!-- Wyze branding -->
+  <text x="150" y="108" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="white" letter-spacing="1">WYZE</text>
+  <!-- Size label -->
+  <text x="150" y="128" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="900" fill="#f59e0b">256</text>
+  <text x="150" y="143" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#94a3b8" letter-spacing="0.5">GB · microSDXC</text>
+  <!-- Speed class badge -->
+  <rect x="127" y="149" width="46" height="13" rx="2" fill="#374151"/>
+  <text x="150" y="159" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#9ca3af">Class 10 · U3</text>
+  <!-- Logo mark -->
+  <circle cx="150" cy="87" r="8" fill="#4C51BF" opacity="0.8"/>
+  <text x="150" y="91" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="white">W</text>
+  <!-- Shadow -->
+  <rect x="95" y="200" width="110" height="6" rx="3" fill="#e5e7eb"/>
+</svg>

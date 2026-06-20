@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Wyze Bundle Builder
 
-## Getting Started
+A production-quality multi-step security system bundle builder built with Next.js, TypeScript, Tailwind CSS, and Redux Toolkit.
 
-First, run the development server:
+## Run Instructions
 
 ```bash
+# Install dependencies
+npm install
+
+# Start the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# Build for production
+npm run build
+npm start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Requires Node.js 18+.
 
-## Learn More
+## Stack
 
-To learn more about Next.js, take a look at the following resources:
+- **Next.js 15** (App Router) — React framework
+- **TypeScript** — static typing throughout
+- **Tailwind CSS** — utility-first styling
+- **Redux Toolkit** — state management (all cart/selection state lives in a single Redux slice)
+- **Lucide React** — icons
+- **localStorage** — client-side persistence for "Save my system for later"
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Architecture Decisions
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Data-driven from JSON.** All products, variants, prices, and step configuration live in [`src/data/products.json`](src/data/products.json). The UI renders entirely from that data — no per-product markup. Swapping in a real API endpoint would only touch the data-loading layer in `page.tsx`.
 
-## Deploy on Vercel
+**Per-variant quantity tracking.** Each (productId, variantId) pair is its own `LineItem` in the Redux store. Switching color chips on a card changes which variant's count is displayed in the stepper, but other variants' counts are preserved. The review panel shows every variant with qty > 0 as its own line.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Seeding and persistence.** On first load, items are seeded from `initialQty` fields in the JSON (matching the design's pre-populated state). On subsequent loads, the persisted localStorage state is restored. Clicking "Save my system for later" explicitly serialises the current store to localStorage under key `wyze_bundle_v2`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Sticky review panel.** On desktop the review panel is `position: sticky` so it stays in view while the user scrolls through steps. On mobile it collapses below the builder.
+
+**Responsive layout.** Desktop: two-column (builder left, review right). Tablet: stacked. Mobile: single-column with the review panel below.
+
+## Tradeoffs / What I'd Do With More Time
+
+- **Real product images.** SVG placeholders stand in for the actual Wyze product photos. In production these would be hosted images or imported assets.
+- **Backend API (bonus).** The spec called out a small backend as a bonus. With more time I'd add a Next.js Route Handler (`/api/products`) serving the JSON and add an optional flag in `page.tsx` to fetch from it rather than import statically.
+- **Animations.** The accordion open/close would benefit from a smooth height transition (`overflow: hidden` + `max-height` animation or Framer Motion).
+- **Error boundaries.** The client components don't have explicit error boundaries; adding them would improve resilience.
+- **Variant image swap.** A nice-to-have: switching a color chip could update the card's product image to match the selected color.
+- **Accessibility audit.** Basic ARIA labels are in place (stepper buttons, variant chips), but a full a11y pass (focus management on accordion open, live region for review panel updates) would be needed before production.

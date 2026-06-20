@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300">
+  <rect width="300" height="300" fill="white"/>
+  <!-- Hub body - rectangular box -->
+  <rect x="65" y="85" width="170" height="130" rx="14" fill="#e4e4e4" stroke="#d0d0d0" stroke-width="1.5"/>
+  <rect x="72" y="92" width="156" height="116" rx="10" fill="#f0f0f0"/>
+  <!-- Top ridge -->
+  <rect x="72" y="92" width="156" height="18" rx="10" fill="#e8e8e8"/>
+  <rect x="72" y="101" width="156" height="9" fill="#e8e8e8"/>
+  <!-- Wyze logo area -->
+  <rect x="100" y="118" width="100" height="28" rx="6" fill="#e0e0e0"/>
+  <text x="150" y="136" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#888" letter-spacing="1.5">WYZE</text>
+  <!-- LED strip -->
+  <rect x="108" y="155" width="84" height="8" rx="4" fill="#d8d8d8"/>
+  <circle cx="125" cy="159" r="3" fill="#60a5fa"/>
+  <circle cx="138" cy="159" r="3" fill="#a8a8a8"/>
+  <circle cx="151" cy="159" r="3" fill="#a8a8a8"/>
+  <circle cx="164" cy="159" r="3" fill="#a8a8a8"/>
+  <circle cx="177" cy="159" r="3" fill="#a8a8a8"/>
+  <!-- Port row -->
+  <rect x="95" y="172" width="22" height="14" rx="3" fill="#ccc"/>
+  <rect x="124" y="172" width="22" height="14" rx="3" fill="#ccc"/>
+  <rect x="153" y="172" width="22" height="14" rx="3" fill="#ccc"/>
+  <rect x="95" y="174" width="22" height="10" rx="2" fill="#bbb"/>
+  <rect x="124" y="174" width="22" height="10" rx="2" fill="#bbb"/>
+  <rect x="153" y="174" width="22" height="10" rx="2" fill="#bbb"/>
+  <!-- Bottom feet -->
+  <rect x="90" y="215" width="30" height="8" rx="4" fill="#d8d8d8"/>
+  <rect x="180" y="215" width="30" height="8" rx="4" fill="#d8d8d8"/>
+</svg>
