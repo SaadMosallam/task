@@ -6,8 +6,6 @@ interface BundleState {
   activeStep: number;
 }
 
-export const STORAGE_KEY = "wyze_bundle_v3";
-
 const initialState: BundleState = {
   items: [],
   activeStep: 1,
@@ -41,11 +39,8 @@ const bundleSlice = createSlice({
     setActiveStep(state, action: PayloadAction<number>) {
       state.activeStep = action.payload;
     },
-    saveSystem() {
-      // Side-effect handled by persistenceMiddleware; action signals explicit save intent.
-    },
   },
 });
 
-export const { seedItems, setQty, setActiveStep, saveSystem } = bundleSlice.actions;
+export const { seedItems, setQty, setActiveStep } = bundleSlice.actions;
 export default bundleSlice.reducer;

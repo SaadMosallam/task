@@ -9,10 +9,9 @@ import { configureStore } from "@reduxjs/toolkit";
 import bundleReducer, {
   setQty,
   seedItems,
-  saveSystem,
-  STORAGE_KEY,
 } from "@/store/bundleSlice";
 import { calcBundleTotals } from "@/lib/bundleCalc";
+import { persistBundleItems, STORAGE_KEY } from "@/lib/bundlePersistence";
 import type { Product } from "@/types";
 import { persistenceMiddleware } from "@/store/persistenceMiddleware";
 import type { LineItem } from "@/types";
@@ -261,12 +260,23 @@ describe("persistence middleware", () => {
     expect(stored).toEqual(seed);
   });
 
-  it("writes to localStorage after saveSystem", () => {
-    const store = makeStore([{ productId: "sensor", qty: 3 }]);
-    store.dispatch(saveSystem());
-
+  it("explicitly persists the current items and reports success", () => {
+    const itemsToSave = [{ productId: "sensor", qty: 3 }];
+    expect(persistBundleItems(itemsToSave)).toBe(true);
     const stored = JSON.parse(mockStorage[STORAGE_KEY] ?? "null");
     expect(stored).toEqual([{ productId: "sensor", qty: 3 }]);
+  });
+
+  it("reports failure when browser storage rejects the write", () => {
+    Object.defineProperty(global, "localStorage", {
+      value: {
+        setItem: () => { throw new Error("Storage unavailable"); },
+      },
+      writable: true,
+      configurable: true,
+    });
+
+    expect(persistBundleItems([{ productId: "sensor", qty: 1 }])).toBe(false);
   });
 
   it("updates localStorage when qty changes", () => {

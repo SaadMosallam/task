@@ -1,10 +1,11 @@
 import type { LineItem, Product } from "@/types";
+import { bundleConfig } from "@/data/bundleConfig";
 
-export const SHIPPING_THRESHOLD = 100;
-export const SHIPPING_COST = 5.99;
 // Scale the financing quote with the configured total while preserving the
 // Figma baseline: $187.89 total -> $19.19/mo.
-export const FINANCING_MONTHLY_FACTOR = 19.19 / 187.89;
+const FINANCING_MONTHLY_FACTOR =
+  bundleConfig.financing.baselineMonthlyPayment /
+  bundleConfig.financing.baselineTotal;
 
 export interface BundleTotals {
   subtotal: number;
@@ -40,9 +41,9 @@ export function calcBundleTotals(
 
   const shipping = !hasItems
     ? 0
-    : subtotal >= SHIPPING_THRESHOLD
+    : subtotal >= bundleConfig.shippingThreshold
       ? 0
-      : SHIPPING_COST;
+      : bundleConfig.shippingCost;
   const total = subtotal + shipping;
   return {
     subtotal,

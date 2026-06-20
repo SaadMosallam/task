@@ -1,10 +1,12 @@
 "use client";
+import { useState } from "react";
 import Image from "next/image";
 import { Product } from "@/types";
 import { useAppDispatch, useAppSelector } from "@/hooks/useAppDispatch";
-import { setQty, saveSystem } from "@/store/bundleSlice";
+import { setQty } from "@/store/bundleSlice";
 import QuantityStepper from "@/components/ui/QuantityStepper";
 import { calcBundleTotals } from "@/lib/bundleCalc";
+import { persistBundleItems } from "@/lib/bundlePersistence";
 import { Truck } from "lucide-react";
 
 interface Props {
@@ -30,6 +32,7 @@ const catLabels: Record<string, string> = {
 export default function ReviewPanel({ products: allProducts }: Props) {
   const dispatch = useAppDispatch();
   const items = useAppSelector((s) => s.bundle.items);
+  const [saveResult, setSaveResult] = useState<"success" | "error" | null>(null);
 
   const productMap = Object.fromEntries(allProducts.map((p) => [p.id, p]));
 
@@ -60,8 +63,7 @@ export default function ReviewPanel({ products: allProducts }: Props) {
     calcBundleTotals(items, productMap);
 
   const handleSave = () => {
-    dispatch(saveSystem());
-    alert("System saved! It will be restored on your next visit.");
+    setSaveResult(persistBundleItems(items) ? "success" : "error");
   };
 
   const handleCheckout = () => {
@@ -179,6 +181,20 @@ export default function ReviewPanel({ products: allProducts }: Props) {
           >
             Save my system for later
           </button>
+
+          {saveResult && (
+            <p
+              role="status"
+              aria-live="polite"
+              className={`text-center text-xs font-medium ${
+                saveResult === "success" ? "text-emerald-700" : "text-red-700"
+              }`}
+            >
+              {saveResult === "success"
+                ? "System saved. It will be restored on your next visit."
+                : "We couldn’t save your system. Check your browser storage settings and try again."}
+            </p>
+          )}
         </div>
       </div>
     </div>

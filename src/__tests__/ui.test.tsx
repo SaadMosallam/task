@@ -3,15 +3,19 @@
  *  - QuantityStepper: min enforcement, increment/decrement callbacks
  *  - VariantSelector: chip rendering, selection callback
  *  - Accordion toggle via StepHeader
- *  - Variant switching in ProductCard (store integration)
- *  - Required-product stepper minimum via ReviewLineRow
+ *  - Product-card to review-panel synchronization
+ *  - Variant state behavior in the store
  */
 import { render, screen, fireEvent } from "@testing-library/react";
+import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import bundleReducer, { seedItems, setActiveStep } from "@/store/bundleSlice";
 import QuantityStepper from "@/components/ui/QuantityStepper";
 import VariantSelector from "@/components/ui/VariantSelector";
 import StepHeader from "@/components/builder/StepHeader";
+import ProductCard from "@/components/builder/ProductCard";
+import ReviewPanel from "@/components/review/ReviewPanel";
+import type { Product } from "@/types";
 
 // ─── helpers ────────────────────────────────────────────────────────────────
 
@@ -176,6 +180,36 @@ describe("accordion store behavior", () => {
 });
 
 // ─── Variant switching (store integration) ───────────────────────────────────
+
+describe("product and review synchronization", () => {
+  const product: Product = {
+    id: "cam-v4",
+    category: "cameras",
+    name: "Cam v4",
+    description: "Test camera",
+    image: "/images/wyze-cam-v4.png",
+    price: 27.98,
+    compareAtPrice: 35.98,
+    variants: [{ id: "white", label: "White", color: "#fff" }],
+  };
+
+  it("updates the review line when quantity changes on the product card", () => {
+    const store = makeStore();
+    store.dispatch(seedItems([{ productId: product.id, variantId: "white", qty: 1 }]));
+
+    render(
+      <Provider store={store}>
+        <ProductCard product={product} />
+        <ReviewPanel products={[product]} />
+      </Provider>,
+    );
+
+    fireEvent.click(screen.getAllByLabelText("Increase quantity")[0]);
+
+    expect(store.getState().bundle.items[0].qty).toBe(2);
+    expect(screen.getByText("$55.96")).toBeInTheDocument();
+  });
+});
 
 describe("variant switching in the store", () => {
   it("selecting a different variant creates a new line item", () => {

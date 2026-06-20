@@ -20,6 +20,12 @@ npm run build
 npm start
 ```
 
+Run the automated test suite with:
+
+```bash
+npm test
+```
+
 Requires Node.js 20.9+.
 
 ## Stack

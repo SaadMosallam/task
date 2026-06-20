@@ -1,8 +1,9 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Product } from "@/types";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
-import { seedItems, STORAGE_KEY } from "@/store/bundleSlice";
+import { seedItems } from "@/store/bundleSlice";
+import { STORAGE_KEY } from "@/lib/bundlePersistence";
 import BuilderStep from "./BuilderStep";
 import ReviewPanel from "@/components/review/ReviewPanel";
 
@@ -20,33 +21,45 @@ interface Props {
 
 export default function BundleBuilder({ products, steps }: Props) {
   const dispatch = useAppDispatch();
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const persisted = localStorage.getItem(STORAGE_KEY);
-    if (persisted) {
-      try {
+    let restored = false;
+
+    try {
+      const persisted = localStorage.getItem(STORAGE_KEY);
+      if (persisted) {
         const parsed = JSON.parse(persisted);
         if (Array.isArray(parsed)) {
           dispatch(seedItems(parsed));
-          return;
+          restored = true;
         }
-      } catch {
-        // fall through to seed defaults
       }
+    } catch {
+      // Fall through to the design defaults when storage is unavailable or invalid.
     }
 
-    const seed = products
-      .filter((p) => p.initialQty && p.initialQty > 0)
-      .map((p) => ({
-        productId: p.id,
-        variantId: p.initialVariantId ?? p.variants?.[0]?.id,
-        qty: p.initialQty!,
-      }));
-    dispatch(seedItems(seed));
+    if (!restored) {
+      const seed = products
+        .filter((p) => p.initialQty && p.initialQty > 0)
+        .map((p) => ({
+          productId: p.id,
+          variantId: p.initialVariantId ?? p.variants?.[0]?.id,
+          qty: p.initialQty!,
+        }));
+      dispatch(seedItems(seed));
+    }
+
+    containerRef.current?.classList.remove("invisible");
+    containerRef.current?.removeAttribute("aria-busy");
   }, [dispatch, products]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div
+      ref={containerRef}
+      className="min-h-screen bg-gray-50 invisible"
+      aria-busy="true"
+    >
       {/* Page header — full bleed, no side padding on mobile */}
       <div className="px-4 sm:px-6 pt-6 pb-4 lg:pt-10 max-w-7xl mx-auto">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center lg:text-left">

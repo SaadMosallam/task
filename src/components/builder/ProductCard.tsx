@@ -76,7 +76,16 @@ export default function ProductCard({ product, isCamera }: Props) {
         </p>
 
         {product.learnMoreUrl && (
-          <a href={product.learnMoreUrl} className="text-xs text-[#4C51BF] hover:underline font-medium w-fit">
+          <a
+            href={product.learnMoreUrl}
+            onClick={(event) => {
+              if (product.learnMoreUrl === "#") {
+                event.preventDefault();
+                window.alert(`${product.name} details are coming soon.`);
+              }
+            }}
+            className="text-xs text-[#4C51BF] hover:underline font-medium w-fit"
+          >
             Learn More
           </a>
         )}
