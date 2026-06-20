@@ -18,10 +18,10 @@ interface Props {
   isLast: boolean;
 }
 
-// cameras: 1-col mobile → 2-col horizontal at md → 5-col vertical at xl
+// cameras: 1-col mobile → auto-fill ≥200px (wraps at 2, 3, 4, 5 cols as space allows)
 // others: 1-col mobile → 2-col at sm
 const GRID: Record<string, string> = {
-  cameras: "grid-cols-1 md:grid-cols-2 xl:grid-cols-5",
+  cameras: "grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(200px,1fr))]",
   plans: "grid-cols-1 sm:grid-cols-2",
   sensors: "grid-cols-1 sm:grid-cols-2",
   accessories: "grid-cols-1 sm:grid-cols-2",
