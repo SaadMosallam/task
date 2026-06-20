@@ -32,7 +32,6 @@ export default function BuilderStep({ step, products, isLast }: Props) {
   const activeStep = useAppSelector((s) => s.bundle.activeStep);
   const items = useAppSelector((s) => s.bundle.items);
   const isOpen = activeStep === step.id;
-  const isCamera = step.category === "cameras";
 
   const selectedCount = products.filter((p) => {
     if (p.variants) {
@@ -56,7 +55,7 @@ export default function BuilderStep({ step, products, isLast }: Props) {
         <div id={`step-panel-${step.id}`} className="bg-[#EEF2FF] px-3 sm:px-5 pb-5 pt-3">
           <div className={`grid ${GRID[step.category] ?? "grid-cols-1 sm:grid-cols-2"} gap-3`}>
             {products.map((p) => (
-              <ProductCard key={p.id} product={p} isCamera={isCamera} />
+              <ProductCard key={p.id} product={p} />
             ))}
           </div>
 

@@ -10,10 +10,9 @@ import { setQty } from "@/store/bundleSlice";
 
 interface Props {
   product: Product;
-  isCamera?: boolean;
 }
 
-export default function ProductCard({ product, isCamera }: Props) {
+export default function ProductCard({ product }: Props) {
   const dispatch = useAppDispatch();
   const items = useAppSelector((s) => s.bundle.items);
 
