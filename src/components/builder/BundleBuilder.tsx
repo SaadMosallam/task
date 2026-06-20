@@ -49,15 +49,18 @@ export default function BundleBuilder({ products, steps }: Props) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 lg:py-10">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 text-center lg:text-left">
+      {/* Page header — full bleed, no side padding on mobile */}
+      <div className="px-4 sm:px-6 pt-6 pb-4 lg:pt-10 max-w-7xl mx-auto">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center lg:text-left">
           Let&apos;s get started!
         </h1>
+      </div>
 
-        <div className="flex flex-col lg:flex-row gap-6 xl:gap-8 items-start">
-          {/* Builder accordion */}
-          <div className="flex-1 min-w-0">
-            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden divide-y divide-gray-100">
+      <div className="max-w-7xl mx-auto sm:px-6 lg:px-6">
+        <div className="flex flex-col lg:flex-row gap-0 sm:gap-6 xl:gap-8 items-start">
+          {/* Builder accordion — edge-to-edge on mobile, rounded on sm+ */}
+          <div className="flex-1 min-w-0 w-full">
+            <div className="bg-white sm:rounded-2xl border-y sm:border border-gray-200 shadow-sm overflow-hidden divide-y divide-gray-100">
               {steps.map((step, idx) => {
                 const stepProducts = products.filter((p) => p.category === step.category);
                 return (
@@ -72,8 +75,8 @@ export default function BundleBuilder({ products, steps }: Props) {
             </div>
           </div>
 
-          {/* Review panel — sticky on desktop, stacked on mobile */}
-          <div className="w-full lg:w-[340px] xl:w-[360px] shrink-0 lg:sticky lg:top-6">
+          {/* Review panel — stacked on mobile/tablet, sticky sidebar on desktop */}
+          <div className="w-full sm:rounded-2xl lg:w-[340px] xl:w-[380px] shrink-0 lg:sticky lg:top-6 mt-4 sm:mt-0">
             <ReviewPanel products={products} />
           </div>
         </div>

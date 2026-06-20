@@ -10,9 +10,11 @@ import { setQty } from "@/store/bundleSlice";
 
 interface Props {
   product: Product;
+  /** cameras use a horizontal layout at md, compact vertical at xl */
+  isCamera?: boolean;
 }
 
-export default function ProductCard({ product }: Props) {
+export default function ProductCard({ product, isCamera }: Props) {
   const dispatch = useAppDispatch();
   const items = useAppSelector((s) => s.bundle.items);
 
@@ -44,12 +46,20 @@ export default function ProductCard({ product }: Props) {
 
   return (
     <div
-      className={`relative flex flex-col rounded-xl border-2 p-3.5 transition-all bg-white h-full
+      className={`relative flex rounded-xl border-2 p-3.5 transition-all bg-white h-full
+        ${isCamera ? "flex-col md:flex-row md:items-start xl:flex-col" : "flex-col"}
         ${isSelected ? "border-[#4C51BF] shadow-md" : "border-gray-200 hover:border-gray-300"}`}
     >
       {product.badge && <Badge label={product.badge} />}
 
-      <div className="relative w-full aspect-4/3 mb-3 mt-1 rounded-lg overflow-hidden bg-gray-50">
+      {/* Image */}
+      <div
+        className={`relative shrink-0 rounded-lg overflow-hidden bg-gray-50
+          ${isCamera
+            ? "w-full aspect-[4/3] mb-3 mt-1 md:w-28 md:h-28 md:mb-0 md:mr-3 md:mt-0 xl:w-full xl:h-auto xl:aspect-[4/3] xl:mb-3 xl:mr-0 xl:mt-1"
+            : "w-full aspect-[4/3] mb-3 mt-1"
+          }`}
+      >
         <Image
           src={product.image}
           alt={product.name}
@@ -58,9 +68,12 @@ export default function ProductCard({ product }: Props) {
         />
       </div>
 
-      <div className="flex-1 flex flex-col gap-2">
+      {/* Content */}
+      <div className="flex-1 flex flex-col gap-1.5 min-w-0">
         <h3 className="font-semibold text-gray-900 text-sm leading-snug">{product.name}</h3>
-        <p className="text-xs text-gray-500 leading-relaxed">{product.description}</p>
+        <p className={`text-xs text-gray-500 leading-relaxed ${isCamera ? "xl:line-clamp-2" : ""}`}>
+          {product.description}
+        </p>
 
         {product.learnMoreUrl && (
           <a href={product.learnMoreUrl} className="text-xs text-[#4C51BF] hover:underline font-medium w-fit">
@@ -73,6 +86,7 @@ export default function ProductCard({ product }: Props) {
             variants={product.variants}
             selected={selectedVariant}
             onSelect={setSelectedVariant}
+            showThumbnail={product.image}
           />
         )}
 

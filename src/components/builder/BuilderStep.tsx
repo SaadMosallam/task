@@ -18,8 +18,10 @@ interface Props {
   isLast: boolean;
 }
 
+// cameras: 1-col mobile → 2-col horizontal at md → 5-col vertical at xl
+// others: 1-col mobile → 2-col at sm
 const GRID: Record<string, string> = {
-  cameras: "grid-cols-1 sm:grid-cols-2 xl:grid-cols-3",
+  cameras: "grid-cols-1 md:grid-cols-2 xl:grid-cols-5",
   plans: "grid-cols-1 sm:grid-cols-2",
   sensors: "grid-cols-1 sm:grid-cols-2",
   accessories: "grid-cols-1 sm:grid-cols-2",
@@ -30,6 +32,7 @@ export default function BuilderStep({ step, products, isLast }: Props) {
   const activeStep = useAppSelector((s) => s.bundle.activeStep);
   const items = useAppSelector((s) => s.bundle.items);
   const isOpen = activeStep === step.id;
+  const isCamera = step.category === "cameras";
 
   const selectedCount = products.filter((p) => {
     if (p.variants) {
@@ -50,10 +53,10 @@ export default function BuilderStep({ step, products, isLast }: Props) {
       />
 
       {isOpen && (
-        <div id={`step-panel-${step.id}`} className="px-4 sm:px-5 pb-5">
+        <div id={`step-panel-${step.id}`} className="bg-[#EEF2FF] px-3 sm:px-5 pb-5 pt-3">
           <div className={`grid ${GRID[step.category] ?? "grid-cols-1 sm:grid-cols-2"} gap-3`}>
             {products.map((p) => (
-              <ProductCard key={p.id} product={p} />
+              <ProductCard key={p.id} product={p} isCamera={isCamera} />
             ))}
           </div>
 
@@ -61,7 +64,7 @@ export default function BuilderStep({ step, products, isLast }: Props) {
             <div className="mt-5 flex justify-center">
               <button
                 onClick={() => dispatch(setActiveStep(step.id + 1))}
-                className="border-2 border-[#4C51BF] text-[#4C51BF] font-semibold text-sm px-10 py-2.5 rounded-xl hover:bg-[#EEF2FF] active:bg-[#E0E7FF] transition-colors cursor-pointer"
+                className="border-2 border-[#4C51BF] text-[#4C51BF] font-semibold text-sm px-10 py-2.5 rounded-xl hover:bg-white active:bg-[#E0E7FF] transition-colors cursor-pointer bg-[#EEF2FF]"
               >
                 Next: {step.nextLabel}
               </button>
