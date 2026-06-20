@@ -4,6 +4,7 @@ import { Product } from "@/types";
 import { useAppDispatch, useAppSelector } from "@/hooks/useAppDispatch";
 import { setQty, saveSystem } from "@/store/bundleSlice";
 import QuantityStepper from "@/components/ui/QuantityStepper";
+import { calcBundleTotals } from "@/lib/bundleCalc";
 import { Truck } from "lucide-react";
 
 interface Props {
@@ -18,8 +19,6 @@ interface ReviewLine {
   linePrice: number;
   compareLinePrice?: number;
 }
-
-const SHIPPING_THRESHOLD = 100;
 
 const catLabels: Record<string, string> = {
   cameras: "CAMERAS",
@@ -57,15 +56,8 @@ export default function ReviewPanel({ products: allProducts }: Props) {
     grouped[line.product.category]?.push(line);
   }
 
-  const subtotal = lines.reduce((s, l) => s + l.linePrice, 0);
-  const compareTotal = lines.reduce((s, l) => s + (l.compareLinePrice ?? l.linePrice), 0);
-  const savings = compareTotal - subtotal;
-
-  const shipping = subtotal >= SHIPPING_THRESHOLD ? 0 : 5.99;
-  const total = subtotal + shipping;
-
-  // Financing: design constant from Figma — does not derive from total
-  const monthlyPayment = total > 0 ? "19.19" : null;
+  const { compareTotal, savings, shipping, total, monthlyPayment } =
+    calcBundleTotals(items, productMap);
 
   const handleSave = () => {
     dispatch(saveSystem());
@@ -171,7 +163,7 @@ export default function ReviewPanel({ products: allProducts }: Props) {
 
           {/* Tablet-only guarantee copy */}
           <p className="hidden sm:block lg:hidden text-[11px] text-gray-500 text-center leading-relaxed">
-            30-day hassle-free returns. Cancel anytime. Covered by the Wyze satisfaction guarantee.
+            30-day hassle-free returns. Not happy? We&apos;ll give you a 100% refund, no questions asked.
           </p>
 
           <button

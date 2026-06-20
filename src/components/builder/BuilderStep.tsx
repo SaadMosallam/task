@@ -21,7 +21,7 @@ interface Props {
 // cameras: 1-col mobile → auto-fill ≥200px (wraps at 2, 3, 4, 5 cols as space allows)
 // others: 1-col mobile → 2-col at sm
 const GRID: Record<string, string> = {
-  cameras: "grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(200px,1fr))]",
+  cameras: "grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(200px,1fr))] lg:grid-cols-2",
   plans: "grid-cols-1 sm:grid-cols-2",
   sensors: "grid-cols-1 sm:grid-cols-2",
   accessories: "grid-cols-1 sm:grid-cols-2",
@@ -32,6 +32,7 @@ export default function BuilderStep({ step, products, isLast }: Props) {
   const activeStep = useAppSelector((s) => s.bundle.activeStep);
   const items = useAppSelector((s) => s.bundle.items);
   const isOpen = activeStep === step.id;
+  const isCamera = step.category === "cameras";
 
   const selectedCount = products.filter((p) => {
     if (p.variants) {
@@ -55,7 +56,7 @@ export default function BuilderStep({ step, products, isLast }: Props) {
         <div id={`step-panel-${step.id}`} className="bg-[#EEF2FF] px-3 sm:px-5 pb-5 pt-3">
           <div className={`grid ${GRID[step.category] ?? "grid-cols-1 sm:grid-cols-2"} gap-3`}>
             {products.map((p) => (
-              <ProductCard key={p.id} product={p} />
+              <ProductCard key={p.id} product={p} isCamera={isCamera} />
             ))}
           </div>
 

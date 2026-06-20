@@ -10,9 +10,11 @@ import { setQty } from "@/store/bundleSlice";
 
 interface Props {
   product: Product;
+  /** Camera cards flip to horizontal (image-left) layout at lg+ */
+  isCamera?: boolean;
 }
 
-export default function ProductCard({ product }: Props) {
+export default function ProductCard({ product, isCamera }: Props) {
   const dispatch = useAppDispatch();
   const items = useAppSelector((s) => s.bundle.items);
 
@@ -44,13 +46,20 @@ export default function ProductCard({ product }: Props) {
 
   return (
     <div
-      className={`relative flex flex-col rounded-xl border-2 p-3.5 transition-all bg-white h-full
+      className={`relative flex rounded-xl border-2 p-3.5 transition-all bg-white h-full
+        ${isCamera ? "flex-col lg:flex-row lg:items-start" : "flex-col"}
         ${isSelected ? "border-[#4C51BF] shadow-md" : "border-gray-200 hover:border-gray-300"}`}
     >
       {product.badge && <Badge label={product.badge} />}
 
       {/* Image */}
-      <div className="relative shrink-0 rounded-lg overflow-hidden bg-gray-50 w-full aspect-[4/3] mb-3 mt-1">
+      <div
+        className={`relative shrink-0 rounded-lg overflow-hidden bg-gray-50
+          ${isCamera
+            ? "w-full aspect-[4/3] mb-3 mt-1 lg:w-28 lg:h-28 lg:aspect-auto lg:mb-0 lg:mr-3 lg:mt-0"
+            : "w-full aspect-[4/3] mb-3 mt-1"
+          }`}
+      >
         <Image
           src={product.image}
           alt={product.name}

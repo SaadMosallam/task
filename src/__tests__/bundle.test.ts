@@ -12,6 +12,8 @@ import bundleReducer, {
   saveSystem,
   STORAGE_KEY,
 } from "@/store/bundleSlice";
+import { calcBundleTotals } from "@/lib/bundleCalc";
+import type { Product } from "@/types";
 import { persistenceMiddleware } from "@/store/persistenceMiddleware";
 import type { LineItem } from "@/types";
 
@@ -147,67 +149,74 @@ describe("seedItems", () => {
   });
 });
 
-// ─── Total calculation (pure logic, mirrors ReviewPanel) ─────────────────────
+// ─── Total calculation via shared calcBundleTotals ───────────────────────────
 
-describe("total calculation", () => {
-  const PRODUCTS = [
-    { id: "cam-v4", price: 27.98, compareAtPrice: 35.98 },
-    { id: "hub", price: 0, compareAtPrice: 29.92 },
-    { id: "plan", price: 9.99, compareAtPrice: 12.99, priceUnit: "mo" as const },
+describe("calcBundleTotals", () => {
+  const PRODUCTS: Product[] = [
+    {
+      id: "cam-v4", category: "cameras", name: "Cam v4", description: "",
+      image: "/cam.png", price: 27.98, compareAtPrice: 35.98,
+      variants: [{ id: "white", label: "White" }],
+    },
+    {
+      id: "hub", category: "accessories", name: "Hub", description: "",
+      image: "/hub.png", price: 0, compareAtPrice: 29.92, required: true,
+    },
+    {
+      id: "plan", category: "plans", name: "Plan", description: "",
+      image: "/plan.png", price: 9.99, compareAtPrice: 12.99, priceUnit: "mo",
+    },
   ];
-
-  function calcTotals(lineItems: LineItem[]) {
-    const productMap = Object.fromEntries(PRODUCTS.map((p) => [p.id, p]));
-    let subtotal = 0;
-    let compareTotal = 0;
-
-    for (const item of lineItems) {
-      if (item.qty <= 0) continue;
-      const p = productMap[item.productId];
-      if (!p) continue;
-      const isPlan = "priceUnit" in p && p.priceUnit === "mo";
-      const qty = isPlan ? 1 : item.qty;
-      subtotal += p.price * qty;
-      compareTotal += (p.compareAtPrice ?? p.price) * qty;
-    }
-
-    const shipping = subtotal >= 100 ? 0 : 5.99;
-    const total = subtotal + shipping;
-    const savings = compareTotal - subtotal;
-    return { subtotal, compareTotal, shipping, total, savings };
-  }
+  const productMap = Object.fromEntries(PRODUCTS.map((p) => [p.id, p]));
 
   it("computes subtotal and savings correctly for multi-qty items", () => {
-    const { subtotal, savings } = calcTotals([
-      { productId: "cam-v4", variantId: "white", qty: 2 },
-    ]);
+    const { subtotal, savings } = calcBundleTotals(
+      [{ productId: "cam-v4", variantId: "white", qty: 2 }],
+      productMap,
+    );
     expect(subtotal).toBeCloseTo(55.96, 2);
     expect(savings).toBeCloseTo(16.0, 2);
   });
 
   it("applies free shipping above the $100 threshold", () => {
-    const { shipping } = calcTotals([
-      { productId: "cam-v4", variantId: "white", qty: 4 },
-    ]);
+    const { shipping } = calcBundleTotals(
+      [{ productId: "cam-v4", variantId: "white", qty: 4 }],
+      productMap,
+    );
     expect(shipping).toBe(0);
   });
 
   it("charges shipping when subtotal is below $100", () => {
-    const { shipping } = calcTotals([
-      { productId: "cam-v4", variantId: "white", qty: 1 },
-    ]);
+    const { shipping } = calcBundleTotals(
+      [{ productId: "cam-v4", variantId: "white", qty: 1 }],
+      productMap,
+    );
     expect(shipping).toBe(5.99);
   });
 
   it("counts plan as qty 1 regardless of line item qty", () => {
-    const { subtotal } = calcTotals([{ productId: "plan", qty: 3 }]);
+    const { subtotal } = calcBundleTotals([{ productId: "plan", qty: 3 }], productMap);
     expect(subtotal).toBeCloseTo(9.99, 2);
   });
 
   it("treats FREE products (price 0) correctly — they don't contribute to subtotal", () => {
-    const { subtotal, savings } = calcTotals([{ productId: "hub", qty: 1 }]);
+    const { subtotal, savings } = calcBundleTotals([{ productId: "hub", qty: 1 }], productMap);
     expect(subtotal).toBe(0);
     expect(savings).toBeCloseTo(29.92, 2);
+  });
+
+  it("derives monthlyPayment as total / 10", () => {
+    // 4 × cam-v4 = $111.92 → free shipping → total = $111.92 → /10 = $11.19
+    const { monthlyPayment, total } = calcBundleTotals(
+      [{ productId: "cam-v4", variantId: "white", qty: 4 }],
+      productMap,
+    );
+    expect(monthlyPayment).toBe((total / 10).toFixed(2));
+  });
+
+  it("returns null monthlyPayment for an empty cart", () => {
+    const { monthlyPayment } = calcBundleTotals([], productMap);
+    expect(monthlyPayment).toBeNull();
   });
 });
 
@@ -227,7 +236,7 @@ describe("persistence middleware", () => {
       writable: true,
       configurable: true,
     });
-    mockStorage[STORAGE_KEY] && delete mockStorage[STORAGE_KEY];
+    delete mockStorage[STORAGE_KEY];
   });
 
   it("writes to localStorage after setQty", () => {
